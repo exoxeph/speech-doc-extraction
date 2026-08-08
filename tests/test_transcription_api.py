@@ -55,7 +55,7 @@ def test_transcription_endpoint_rejects_invalid_languages(language: str) -> None
     }
 
 
-@pytest.mark.parametrize("filename", ["sample.wav", "sample.mp3", "sample.m4a"])
+@pytest.mark.parametrize("filename", ["sample.wav", "sample.mp3", "sample.m4a", "sample.aac"])
 def test_transcription_endpoint_accepts_supported_audio_formats(filename: str) -> None:
     client = TestClient(app)
 
@@ -83,7 +83,7 @@ def test_transcription_endpoint_rejects_unsupported_audio_formats(filename: str)
     assert response.json() == {
         "error": {
             "code": "UNSUPPORTED_AUDIO_FORMAT",
-            "message": "Supported audio formats are wav, mp3 and m4a.",
+            "message": "Supported audio formats are wav, mp3, m4a and aac.",
         }
     }
 
