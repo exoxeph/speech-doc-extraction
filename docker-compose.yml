@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    environment:
+      TRANSCRIPTION_PROVIDER: mock
+      MOCK_TRANSCRIPTION_RESPONSE_DIR: testdata/mock_responses/transcription
+    ports:
+      - "8000:8000"

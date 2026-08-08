@@ -1,0 +1,16 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app ./app
+COPY testdata/mock_responses ./testdata/mock_responses
+
+ENV TRANSCRIPTION_PROVIDER=mock
+ENV MOCK_TRANSCRIPTION_RESPONSE_DIR=testdata/mock_responses/transcription
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

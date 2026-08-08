@@ -1,0 +1,8 @@
+.git
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+REFERENCE.md
+ENDPOINT_1.md
+testdata/audio/
