@@ -11,7 +11,7 @@ from app.services.transcription import TranscriptionService
 
 router = APIRouter(prefix="/api/v1", tags=["transcription"])
 SUPPORTED_LANGUAGES = {"bn", "en", "auto"}
-SUPPORTED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a", ".aac"}
+SUPPORTED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a"}
 MAX_AUDIO_BYTES = 25 * 1024 * 1024
 
 
@@ -44,7 +44,7 @@ async def transcribe_audio(
             content={
                 "error": {
                     "code": "UNSUPPORTED_AUDIO_FORMAT",
-                    "message": "Supported audio formats are wav, mp3, m4a and aac.",
+                    "message": "Supported audio formats are wav, mp3 and m4a.",
                 }
             },
         )

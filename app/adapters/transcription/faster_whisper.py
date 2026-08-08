@@ -74,8 +74,6 @@ def _guess_audio_suffix(audio: bytes) -> str:
         return ".wav"
     if audio.startswith(b"ID3") or audio[:2] in {b"\xff\xfb", b"\xff\xf3", b"\xff\xf2"}:
         return ".mp3"
-    if audio[:2] in {b"\xff\xf1", b"\xff\xf9"}:
-        return ".aac"
     if b"ftyp" in audio[:16]:
         return ".m4a"
 
