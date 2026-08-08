@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from app.adapters.transcription.base import TranscriptionProvider
+from app.adapters.transcription.faster_whisper import FasterWhisperTranscriptionAdapter
 from app.adapters.transcription.mock import MockTranscriptionAdapter
 from app.config import Settings
 
@@ -10,6 +11,9 @@ def create_transcription_provider(settings: Settings) -> TranscriptionProvider:
         return MockTranscriptionAdapter(
             _resolve_project_path(settings.mock_transcription_response_dir)
         )
+
+    if settings.transcription_provider == "faster-whisper":
+        return FasterWhisperTranscriptionAdapter()
 
     raise ValueError(
         f"Unsupported transcription provider: {settings.transcription_provider}"
