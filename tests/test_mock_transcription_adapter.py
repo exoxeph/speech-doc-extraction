@@ -10,7 +10,7 @@ FIXTURE_DIR = Path("testdata/mock_responses/transcription")
 def test_mock_transcription_adapter_returns_english_fixture() -> None:
     provider = MockTranscriptionAdapter(FIXTURE_DIR)
 
-    result = asyncio.run(provider.transcribe(b"audio bytes", "english"))
+    result = asyncio.run(provider.transcribe(b"audio bytes", "en"))
 
     assert result.transcript == "Hello, this is a test."
     assert result.detected_language == "en"
@@ -21,7 +21,7 @@ def test_mock_transcription_adapter_returns_english_fixture() -> None:
 def test_mock_transcription_adapter_returns_bengali_fixture() -> None:
     provider = MockTranscriptionAdapter(FIXTURE_DIR)
 
-    result = asyncio.run(provider.transcribe(b"audio bytes", "bengali"))
+    result = asyncio.run(provider.transcribe(b"audio bytes", "bn"))
 
     assert result.transcript == "আমি আজ হাসপাতালে গিয়েছিলাম"
     assert result.detected_language == "bn"
