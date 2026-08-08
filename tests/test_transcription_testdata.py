@@ -4,7 +4,9 @@ from pathlib import Path
 
 def test_transcription_reference_files_exist() -> None:
     audio_dir = Path("testdata/audio")
-    references = json.loads((audio_dir / "reference_transcripts.json").read_text())
+    references = json.loads(
+        (audio_dir / "reference_transcripts.json").read_text(encoding="utf-8")
+    )
 
     audio_entries = {
         filename: metadata

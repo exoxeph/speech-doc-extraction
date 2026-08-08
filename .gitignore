@@ -1,5 +1,6 @@
 REFERENCE.md
 ENDPOINT_1.md
+_app-files.zip_
 __pycache__/
 *.py[cod]
 .pytest_cache/
