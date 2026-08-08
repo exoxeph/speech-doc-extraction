@@ -34,7 +34,8 @@ class FasterWhisperTranscriptionAdapter:
                 provider="faster-whisper",
             )
 
-        with tempfile.NamedTemporaryFile(suffix=".audio", delete=False) as audio_file:
+        suffix = _guess_audio_suffix(audio)
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as audio_file:
             audio_file.write(audio)
             audio_path = Path(audio_file.name)
 
@@ -66,3 +67,16 @@ class FasterWhisperTranscriptionAdapter:
             duration=float(getattr(info, "duration", 0.0)),
             provider="faster-whisper",
         )
+
+
+def _guess_audio_suffix(audio: bytes) -> str:
+    if audio.startswith(b"RIFF") and b"WAVE" in audio[:16]:
+        return ".wav"
+    if audio.startswith(b"ID3") or audio[:2] in {b"\xff\xfb", b"\xff\xf3", b"\xff\xf2"}:
+        return ".mp3"
+    if audio[:2] in {b"\xff\xf1", b"\xff\xf9"}:
+        return ".aac"
+    if b"ftyp" in audio[:16]:
+        return ".m4a"
+
+    return ".audio"
