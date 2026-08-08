@@ -1,0 +1,25 @@
+{
+  "english_clean.wav": {
+    "language": "en",
+    "transcript": "Today I am going to university.",
+    "source": "Generated locally with Microsoft Zira Desktop text-to-speech."
+  },
+  "silence.wav": {
+    "language": null,
+    "transcript": "",
+    "source": "Generated locally as three seconds of PCM silence."
+  },
+  "ambient_noise.wav": {
+    "language": null,
+    "transcript": "",
+    "source": "Generated locally as low-amplitude random background noise."
+  },
+  "short_audio.wav": {
+    "language": null,
+    "transcript": "",
+    "source": "Generated locally as a one-second tone to exercise short non-speech input."
+  },
+  "_notes": {
+    "bengali_clean.wav": "Still needs a real Bengali speech recording. This machine only has English Windows TTS voices installed."
+  }
+}
