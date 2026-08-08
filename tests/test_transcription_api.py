@@ -86,3 +86,36 @@ def test_transcription_endpoint_rejects_unsupported_audio_formats(filename: str)
             "message": "Supported audio formats are wav, mp3 and m4a.",
         }
     }
+
+
+def test_transcription_endpoint_accepts_audio_at_size_limit() -> None:
+    client = TestClient(app)
+    max_size_audio = b"x" * (25 * 1024 * 1024)
+
+    response = client.post(
+        "/api/v1/transcribe",
+        files={"file": ("sample.wav", max_size_audio, "audio/wav")},
+        data={"language": "en"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["provider"] == "mock"
+
+
+def test_transcription_endpoint_rejects_audio_over_size_limit() -> None:
+    client = TestClient(app)
+    oversized_audio = b"x" * ((25 * 1024 * 1024) + 1)
+
+    response = client.post(
+        "/api/v1/transcribe",
+        files={"file": ("sample.wav", oversized_audio, "audio/wav")},
+        data={"language": "en"},
+    )
+
+    assert response.status_code == 413
+    assert response.json() == {
+        "error": {
+            "code": "FILE_TOO_LARGE",
+            "message": "Audio file exceeds the 25 MB limit.",
+        }
+    }

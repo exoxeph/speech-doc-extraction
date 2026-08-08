@@ -11,6 +11,7 @@ from app.services.transcription import TranscriptionService
 router = APIRouter(prefix="/api/v1", tags=["transcription"])
 SUPPORTED_LANGUAGES = {"bn", "en", "auto"}
 SUPPORTED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a"}
+MAX_AUDIO_BYTES = 25 * 1024 * 1024
 
 
 def get_transcription_service() -> TranscriptionService:
@@ -48,6 +49,17 @@ async def transcribe_audio(
         )
 
     audio = await file.read()
+    if len(audio) > MAX_AUDIO_BYTES:
+        return JSONResponse(
+            status_code=413,
+            content={
+                "error": {
+                    "code": "FILE_TOO_LARGE",
+                    "message": "Audio file exceeds the 25 MB limit.",
+                }
+            },
+        )
+
     service = get_transcription_service()
     result = await service.transcribe(audio, language)
 
