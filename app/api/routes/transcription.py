@@ -3,8 +3,9 @@ from pathlib import Path
 from fastapi import APIRouter, File, Form, UploadFile
 from fastapi.responses import JSONResponse
 
-from app.adapters.transcription.mock import MockTranscriptionAdapter
+from app.adapters.transcription.factory import create_transcription_provider
 from app.api.schemas.transcription import TranscriptionResponse
+from app.config import get_settings
 from app.services.transcription import TranscriptionService
 
 
@@ -15,9 +16,9 @@ MAX_AUDIO_BYTES = 25 * 1024 * 1024
 
 
 def get_transcription_service() -> TranscriptionService:
-    project_root = Path(__file__).resolve().parents[3]
-    response_dir = project_root / "testdata" / "mock_responses" / "transcription"
-    return TranscriptionService(MockTranscriptionAdapter(response_dir))
+    settings = get_settings()
+    provider = create_transcription_provider(settings)
+    return TranscriptionService(provider)
 
 
 @router.post("/transcribe", response_model=TranscriptionResponse)
