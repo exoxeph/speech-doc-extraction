@@ -119,3 +119,21 @@ def test_transcription_endpoint_rejects_audio_over_size_limit() -> None:
             "message": "Audio file exceeds the 25 MB limit.",
         }
     }
+
+
+def test_transcription_endpoint_handles_audio_with_no_detected_speech() -> None:
+    client = TestClient(app)
+
+    response = client.post(
+        "/api/v1/transcribe",
+        files={"file": ("silence.wav", b"\x00" * 100, "audio/wav")},
+        data={"language": "en"},
+    )
+
+    assert response.status_code == 200
+
+    body = response.json()
+    assert body["transcript"] == ""
+    assert body["detected_language"] is None
+    assert body["duration"] > 0
+    assert body["provider"] == "mock"

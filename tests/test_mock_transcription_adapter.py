@@ -27,3 +27,14 @@ def test_mock_transcription_adapter_returns_bengali_fixture() -> None:
     assert result.detected_language == "bn"
     assert result.duration == 4.32
     assert result.provider == "mock"
+
+
+def test_mock_transcription_adapter_returns_empty_transcript_for_silence() -> None:
+    provider = MockTranscriptionAdapter(FIXTURE_DIR)
+
+    result = asyncio.run(provider.transcribe(b"\x00" * 100, "en"))
+
+    assert result.transcript == ""
+    assert result.detected_language is None
+    assert result.duration == 4.8
+    assert result.provider == "mock"
