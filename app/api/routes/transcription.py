@@ -10,6 +10,7 @@ from app.services.transcription import TranscriptionService
 
 router = APIRouter(prefix="/api/v1", tags=["transcription"])
 SUPPORTED_LANGUAGES = {"bn", "en", "auto"}
+SUPPORTED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a"}
 
 
 def get_transcription_service() -> TranscriptionService:
@@ -30,6 +31,18 @@ async def transcribe_audio(
                 "error": {
                     "code": "INVALID_LANGUAGE",
                     "message": "Supported languages are bn, en and auto.",
+                }
+            },
+        )
+
+    file_extension = Path(file.filename or "").suffix.lower()
+    if file_extension not in SUPPORTED_AUDIO_EXTENSIONS:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "error": {
+                    "code": "UNSUPPORTED_AUDIO_FORMAT",
+                    "message": "Supported audio formats are wav, mp3 and m4a.",
                 }
             },
         )
