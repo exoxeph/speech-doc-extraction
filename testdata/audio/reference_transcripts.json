@@ -1,4 +1,52 @@
 {
+  "en_clean.mp3": {
+    "language": "en",
+    "transcript": "The university laboratory opens at nine in the morning, and the report will be ready by five.",
+    "source": "User-recorded clear English, normal volume. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Basic English transcription"
+  },
+  "bn_clean.mp3": {
+    "language": "bn",
+    "transcript": "আমি আজ সকালে বিশ্ববিদ্যালয়ে গিয়েছিলাম এবং বিকেলে আবার বাসায় ফিরে এসেছি।",
+    "source": "User-recorded clear Bangla, normal volume. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Basic Bengali transcription"
+  },
+  "en_noisy.mp3": {
+    "language": "en",
+    "transcript": "My appointment is on Tuesday at ten thirty in the morning.",
+    "source": "User-recorded English with fan, AC, or background noise. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Noise robustness plus numbers and time"
+  },
+  "bn_noisy.mp3": {
+    "language": "bn",
+    "transcript": "আগামীকাল সকাল দশটায় আমার ডাক্তারের অ্যাপয়েন্টমেন্ট আছে।",
+    "source": "User-recorded Bangla with fan, traffic, or room noise. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Bengali under noise"
+  },
+  "bn_en_codeswitch.mp3": {
+    "language": "auto",
+    "transcript": "আজকে আমার class সকাল দশটায় শুরু হবে, তারপর আমি lab report collect করতে যাব।",
+    "source": "User-recorded natural Bangla and English code-switching. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Code-switching and auto language mode"
+  },
+  "en_low_volume.mp3": {
+    "language": "en",
+    "transcript": "Please send the final report to the laboratory before Thursday afternoon.",
+    "source": "User-recorded English spoken quietly or farther from the microphone. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Weak or low-volume speech"
+  },
+  "silence.mp3": {
+    "language": null,
+    "transcript": "",
+    "source": "User-recorded five to eight seconds of actual silence. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Required no-speech handling"
+  },
+  "ambient_noise.mp3": {
+    "language": null,
+    "transcript": "",
+    "source": "User-recorded five to ten seconds of fan, AC, or street noise with no voices. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
+    "tests": "Ensures model does not hallucinate speech"
+  },
   "en_clean.aac": {
     "language": "en",
     "transcript": "The university laboratory opens at nine in the morning, and the report will be ready by five.",
