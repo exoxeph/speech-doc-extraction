@@ -1,0 +1,5 @@
+REFERENCE.md
+ENDPOINT_1.md
+__pycache__/
+*.py[cod]
+.pytest_cache/
