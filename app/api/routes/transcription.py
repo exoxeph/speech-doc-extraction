@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from fastapi import APIRouter, File, Form, UploadFile
+from fastapi.responses import JSONResponse
 
 from app.adapters.transcription.mock import MockTranscriptionAdapter
 from app.api.schemas.transcription import TranscriptionResponse
@@ -8,6 +9,7 @@ from app.services.transcription import TranscriptionService
 
 
 router = APIRouter(prefix="/api/v1", tags=["transcription"])
+SUPPORTED_LANGUAGES = {"bn", "en", "auto"}
 
 
 def get_transcription_service() -> TranscriptionService:
@@ -20,7 +22,18 @@ def get_transcription_service() -> TranscriptionService:
 async def transcribe_audio(
     file: UploadFile = File(...),
     language: str = Form(...),
-) -> TranscriptionResponse:
+) -> TranscriptionResponse | JSONResponse:
+    if language not in SUPPORTED_LANGUAGES:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "error": {
+                    "code": "INVALID_LANGUAGE",
+                    "message": "Supported languages are bn, en and auto.",
+                }
+            },
+        )
+
     audio = await file.read()
     service = get_transcription_service()
     result = await service.transcribe(audio, language)
