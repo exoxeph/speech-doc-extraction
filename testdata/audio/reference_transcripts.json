@@ -47,54 +47,6 @@
     "source": "User-recorded five to ten seconds of fan, AC, or street noise with no voices. Converted from AAC to MP3 with FFmpeg for real-provider compatibility.",
     "tests": "Ensures model does not hallucinate speech"
   },
-  "en_clean.aac": {
-    "language": "en",
-    "transcript": "The university laboratory opens at nine in the morning, and the report will be ready by five.",
-    "source": "User-recorded clear English, normal volume.",
-    "tests": "Basic English transcription"
-  },
-  "bn_clean.aac": {
-    "language": "bn",
-    "transcript": "আমি আজ সকালে বিশ্ববিদ্যালয়ে গিয়েছিলাম এবং বিকেলে আবার বাসায় ফিরে এসেছি।",
-    "source": "User-recorded clear Bangla, normal volume.",
-    "tests": "Basic Bengali transcription"
-  },
-  "en_noisy.aac": {
-    "language": "en",
-    "transcript": "My appointment is on Tuesday at ten thirty in the morning.",
-    "source": "User-recorded English with fan, AC, or background noise.",
-    "tests": "Noise robustness plus numbers and time"
-  },
-  "bn_noisy.aac": {
-    "language": "bn",
-    "transcript": "আগামীকাল সকাল দশটায় আমার ডাক্তারের অ্যাপয়েন্টমেন্ট আছে।",
-    "source": "User-recorded Bangla with fan, traffic, or room noise.",
-    "tests": "Bengali under noise"
-  },
-  "bn_en_codeswitch.aac": {
-    "language": "auto",
-    "transcript": "আজকে আমার class সকাল দশটায় শুরু হবে, তারপর আমি lab report collect করতে যাব।",
-    "source": "User-recorded natural Bangla and English code-switching.",
-    "tests": "Code-switching and auto language mode"
-  },
-  "en_low_volume.aac": {
-    "language": "en",
-    "transcript": "Please send the final report to the laboratory before Thursday afternoon.",
-    "source": "User-recorded English spoken quietly or farther from the microphone.",
-    "tests": "Weak or low-volume speech"
-  },
-  "silence.aac": {
-    "language": null,
-    "transcript": "",
-    "source": "User-recorded five to eight seconds of actual silence.",
-    "tests": "Required no-speech handling"
-  },
-  "ambient_noise.aac": {
-    "language": null,
-    "transcript": "",
-    "source": "User-recorded five to ten seconds of fan, AC, or street noise with no voices.",
-    "tests": "Ensures model does not hallucinate speech"
-  },
   "english_clean.wav": {
     "language": "en",
     "transcript": "Today I am going to university.",
