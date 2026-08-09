@@ -6,6 +6,7 @@ from app.adapters.transcription.factory import create_transcription_provider
 import app.adapters.transcription.factory as transcription_factory
 from app.adapters.ocr.factory import create_ocr_provider
 from app.adapters.ocr.mock import MockOCRAdapter
+import app.adapters.ocr.factory as ocr_factory
 from app.adapters.transcription.mock import MockTranscriptionAdapter
 from app.config import Settings, get_settings
 
@@ -56,6 +57,17 @@ def test_factory_rejects_unknown_ocr_provider() -> None:
 
     with pytest.raises(ValueError, match="Unsupported OCR provider: banana"):
         create_ocr_provider(settings)
+
+
+def test_factory_creates_tesseract_provider(monkeypatch) -> None:
+    class StubTesseractProvider:
+        pass
+
+    monkeypatch.setattr(ocr_factory, "TesseractOCRAdapter", StubTesseractProvider)
+
+    provider = create_ocr_provider(Settings(ocr_provider="tesseract"))
+
+    assert isinstance(provider, StubTesseractProvider)
 
 
 def test_factory_creates_faster_whisper_provider(monkeypatch) -> None:
