@@ -13,7 +13,7 @@ def parse_lab_report_meta(lines: list[str]) -> LabReportMeta:
             or _find_labeled_value(lines, [r"date"])
         ),
         lab_name=_find_lab_name(lines),
-        reference_no=_find_labeled_value(lines, [r"reference\s*no", r"ref\s*no\.?"]),
+        reference_no=_find_reference_no(lines),
     )
 
 
@@ -38,8 +38,14 @@ def _clean_labeled_value(value: str) -> str:
 
 def _find_age(lines: list[str]) -> str | None:
     for line in lines:
-        match = re.search(r"\bage\b\s*[:#.-]?\s*(?P<age>\d{1,3})\b", line, re.IGNORECASE)
+        match = re.search(
+            r"\bage\b\s*[:#.-]?\s*(?P<age>\d{1,3})(?P<ocr_zero>[°º])?(?!\d)",
+            line,
+            re.IGNORECASE,
+        )
         if match:
+            if match.group("ocr_zero"):
+                return f"{match.group('age')}0"
             return match.group("age")
 
     return None
@@ -66,6 +72,10 @@ def _find_sex(lines: list[str]) -> str | None:
 def _find_lab_name(lines: list[str]) -> str | None:
     non_empty = [line.strip() for line in lines[:5] if line.strip()]
     for index, stripped in enumerate(non_empty):
+        facility = re.search(r"\bfacility\b\s*[:#.-]?\s*(?P<value>.+)$", stripped, re.IGNORECASE)
+        if facility:
+            return _clean_labeled_value(facility.group("value"))
+
         if _is_report_title(stripped):
             if index > 0:
                 return non_empty[index - 1]
@@ -85,3 +95,17 @@ def _is_report_title(line: str) -> bool:
             re.IGNORECASE,
         )
     )
+
+
+def _find_reference_no(lines: list[str]) -> str | None:
+    value = _find_labeled_value(
+        lines,
+        [r"reference\s*no", r"ref\s*no\.?", r"cases?"],
+    )
+    if value is None:
+        return None
+
+    if value.upper().startswith("SYN-"):
+        return value.upper().replace("@", "0").replace("Q", "0")
+
+    return value

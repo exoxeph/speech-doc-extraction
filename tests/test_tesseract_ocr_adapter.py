@@ -15,7 +15,12 @@ def test_tesseract_adapter_maps_stdout_to_ocr_lines() -> None:
         return subprocess.CompletedProcess(
             args=args[0],
             returncode=0,
-            stdout="Patient Name: John Doe\nHemoglobin    12.5    gm/dl",
+            stdout=(
+                "LAB REPORT\n"
+                "Patient Name: John Doe\n"
+                "Glucose    12.5    mg/dL    10.0 - 15.0\n"
+                "Reference Range"
+            ),
             stderr="",
         )
 
@@ -25,13 +30,41 @@ def test_tesseract_adapter_maps_stdout_to_ocr_lines() -> None:
 
     assert result.provider == "tesseract"
     assert result.lines == [
+        "LAB REPORT",
         "Patient Name: John Doe",
-        "Hemoglobin    12.5    gm/dl",
+        "Glucose    12.5    mg/dL    10.0 - 15.0",
+        "Reference Range",
     ]
     assert calls[0][0][0][0] == "tesseract"
     assert calls[0][1]["capture_output"] is True
     assert calls[0][1]["encoding"] == "utf-8"
     assert calls[0][1]["errors"] == "replace"
+
+
+def test_tesseract_adapter_retries_sparse_output_with_single_block_psm() -> None:
+    calls = []
+
+    def fake_runner(*args, **kwargs):
+        calls.append((args, kwargs))
+        if len(calls) == 1:
+            return subprocess.CompletedProcess(args=args[0], returncode=0, stdout="", stderr="")
+        return subprocess.CompletedProcess(
+            args=args[0],
+            returncode=0,
+            stdout="LAB REPORT\nGlucose value=84.2; unit=mg/dL; range=N/A",
+            stderr="",
+        )
+
+    adapter = TesseractOCRAdapter(runner=fake_runner)
+
+    result = asyncio.run(adapter.extract_text(PNG_BYTES))
+
+    assert result.lines == [
+        "LAB REPORT",
+        "Glucose value=84.2; unit=mg/dL; range=N/A",
+    ]
+    assert calls[0][0][0] == ["tesseract", calls[0][0][0][1], "stdout", "-l", "eng"]
+    assert calls[1][0][0][-2:] == ["--psm", "6"]
 
 
 def test_guess_image_suffix_detects_supported_images() -> None:

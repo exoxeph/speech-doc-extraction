@@ -91,3 +91,19 @@ def test_parse_metadata_strips_ocr_punctuation_after_label() -> None:
     meta = parse_lab_report_meta(["patient Name; Guadalupe206 valencia279"])
 
     assert meta.patient_name == "Guadalupe206 valencia279"
+
+
+def test_parse_metadata_from_rotated_alternate_ocr_lines() -> None:
+    meta = parse_lab_report_meta(
+        [
+            "facility: PRIMARY CARE ASSOCIATES LLC",
+            "report date: november 26, 2019",
+            "cases SYN-@1AQQ6CE",
+            "rogelioi? pacochao35 (M)» 008 1969-10-07, age 5°",
+        ]
+    )
+
+    assert meta.age == "50"
+    assert meta.report_date == "november 26, 2019"
+    assert meta.lab_name == "PRIMARY CARE ASSOCIATES LLC"
+    assert meta.reference_no == "SYN-01A006CE"

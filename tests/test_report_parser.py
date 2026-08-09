@@ -146,6 +146,27 @@ def test_parse_multiline_observed_value_row_cleans_cropped_artifacts() -> None:
     assert results[1].reference_range == "N/A"
 
 
+def test_parse_alternate_key_value_result_rows_preserves_ocr_lines() -> None:
+    lines = [
+        "* Glucose [Mass/volume] in Serum or Plasma",
+        "  value=84.23 unit=mg/dl; range=N/A",
+        "* Urea nitrogen [Mass/volume] in Serum or Plasma",
+        "  yalue=16.75 unit=mg/dt3 range=N/A",
+    ]
+
+    results = parse_lab_result_rows(lines)
+
+    assert len(results) == 2
+    assert results[0].test_name == "Glucose [Mass/volume] in Serum or Plasma"
+    assert results[0].value.numeric == 84.23
+    assert results[0].unit == "mg/dL"
+    assert results[0].reference_range == "N/A"
+    assert results[0].raw_line == "\n".join(lines[:2])
+    assert results[1].test_name == "Urea nitrogen [Mass/volume] in Serum or Plasma"
+    assert results[1].value.numeric == 16.75
+    assert results[1].unit == "mg/dL"
+
+
 def test_parse_collapsed_ocr_result_row_preserves_raw_line() -> None:
     raw_line = "Hemoglobin 12.5 gm/di 13.0 - 17.0 L"
 

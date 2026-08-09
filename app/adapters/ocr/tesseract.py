@@ -22,20 +22,42 @@ class TesseractOCRAdapter:
             image_path = Path(image_file.name)
 
         try:
-            completed = self.runner(
-                [self.command, str(image_path), "stdout", "-l", "eng"],
-                check=True,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-            )
+            completed = self._run_tesseract(image_path)
+            if _ocr_signal_score(completed.stdout) < 8:
+                completed = _better_result(
+                    completed, self._run_tesseract(image_path, ["--psm", "6"])
+                )
+            if _ocr_signal_score(completed.stdout) < 8:
+                for candidate_path in _create_preprocessed_candidates(image_path):
+                    try:
+                        completed = _better_result(
+                            completed,
+                            self._run_tesseract(candidate_path, ["--psm", "6"]),
+                        )
+                    finally:
+                        candidate_path.unlink(missing_ok=True)
         finally:
             image_path.unlink(missing_ok=True)
 
         return OCRResult(
             lines=completed.stdout.splitlines(),
             provider="tesseract",
+        )
+
+    def _run_tesseract(
+        self, image_path: Path, extra_args: list[str] | None = None
+    ) -> subprocess.CompletedProcess[str]:
+        command = [self.command, str(image_path), "stdout", "-l", "eng"]
+        if extra_args:
+            command.extend(extra_args)
+
+        return self.runner(
+            command,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
         )
 
 
@@ -46,3 +68,56 @@ def _guess_image_suffix(document: bytes) -> str:
         return ".png"
 
     return ".image"
+
+
+def _better_result(
+    current: subprocess.CompletedProcess[str],
+    candidate: subprocess.CompletedProcess[str],
+) -> subprocess.CompletedProcess[str]:
+    if _ocr_signal_score(candidate.stdout) > _ocr_signal_score(current.stdout):
+        return candidate
+
+    return current
+
+
+def _ocr_signal_score(text: str | None) -> int:
+    if not text:
+        return 0
+
+    meaningful_lines = [line for line in text.splitlines() if line.strip()]
+    lowered = text.lower()
+    keyword_score = sum(
+        lowered.count(keyword)
+        for keyword in [
+            "lab",
+            "report",
+            "patient",
+            "facility",
+            "glucose",
+            "creatinine",
+            "sodium",
+            "value",
+            "unit",
+            "range",
+        ]
+    )
+    return min(len(meaningful_lines), 3) + keyword_score
+
+
+def _create_preprocessed_candidates(image_path: Path) -> list[Path]:
+    try:
+        from PIL import Image, ImageOps
+    except ImportError:
+        return []
+
+    image = Image.open(image_path).convert("RGB")
+    candidates: list[Path] = []
+    for angle in [-10, 10]:
+        rotated = image.rotate(angle, expand=True, fillcolor=(30, 30, 30))
+        processed = ImageOps.autocontrast(ImageOps.grayscale(rotated))
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as candidate_file:
+            candidate_path = Path(candidate_file.name)
+        processed.save(candidate_path)
+        candidates.append(candidate_path)
+
+    return candidates

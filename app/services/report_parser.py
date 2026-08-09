@@ -95,7 +95,7 @@ def parse_lab_result_rows(lines: list[str]) -> list[LabResult]:
             continue
 
         if pending_test_line is not None:
-            multiline_result = _parse_observed_value_row(pending_test_line, line)
+            multiline_result = _parse_multiline_value_row(pending_test_line, line)
             if multiline_result is not None:
                 results.append(multiline_result)
                 pending_test_line = None
@@ -105,6 +105,12 @@ def parse_lab_result_rows(lines: list[str]) -> list[LabResult]:
             pending_test_line = line
 
     return results
+
+
+def _parse_multiline_value_row(test_line: str, value_line: str) -> LabResult | None:
+    return _parse_observed_value_row(test_line, value_line) or _parse_key_value_row(
+        test_line, value_line
+    )
 
 
 def _parse_observed_value_row(test_line: str, value_line: str) -> LabResult | None:
@@ -121,6 +127,31 @@ def _parse_observed_value_row(test_line: str, value_line: str) -> LabResult | No
         r"(?P<unit>.+?)"
         r"(?:\s+reference\s+range\s*[:!]?\s*(?P<reference_range>.*))?$",
         normalized_line,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return None
+
+    value = normalize_lab_value(match.group("value"))
+    if value is None:
+        return None
+
+    return LabResult(
+        test_name=_clean_test_name(test_line),
+        value=value,
+        unit=normalize_unit(match.group("unit")),
+        reference_range=_normalize_reference_range(match.group("reference_range") or ""),
+        flag="",
+        raw_line=f"{test_line}\n{value_line}",
+    )
+
+
+def _parse_key_value_row(test_line: str, value_line: str) -> LabResult | None:
+    match = re.search(
+        r"\b[vy]alue\s*=\s*(?P<value>[^\s;]+(?:\s*(?:x|\*)\s*10\^?\d+)?)"
+        r"\s+[uy]nit\s*=\s*(?P<unit>[^; ]+)"
+        r"(?:[; ]+\s*range\s*=\s*(?P<reference_range>[^;]+))?",
+        value_line,
         flags=re.IGNORECASE,
     )
     if not match:
@@ -158,7 +189,7 @@ def _looks_like_test_name_line(line: str) -> bool:
 def _clean_test_name(line: str) -> str:
     stripped = line.strip()
     without_number = re.sub(r"^\d+[\).,]\s*", "", stripped).strip()
-    without_marker = without_number.lstrip(" ,.;:%)]").strip()
+    without_marker = without_number.lstrip(" ,.;:%)]*").strip()
     return re.sub(
         r"\s*[:;]\s*(?:n/?a|w/?a)$",
         "",
