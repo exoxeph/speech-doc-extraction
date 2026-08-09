@@ -1,0 +1,26 @@
+LAB REPORT
+Facility: PRIMARY CARE ASSOCIATES LLC
+Report date: November 26, 2019
+Case: SYN-01A006CE
+
+Rogelio17 Pacocha935 (M), DOB 1969-10-07, age 50
+
+RESULTS
+* Glucose [Mass/volume] in Serum or Plasma
+  value=84.2; unit=mg/dL; range=N/A
+* Urea nitrogen [Mass/volume] in Serum or Plasma
+  value=16.7; unit=mg/dL; range=N/A
+* Creatinine [Mass/volume] in Serum or Plasma
+  value=1.4; unit=mg/dL; range=N/A
+* Calcium [Mass/volume] in Serum or Plasma
+  value=10.1; unit=mg/dL; range=N/A
+* Sodium [Moles/volume] in Serum or Plasma
+  value=142.4; unit=mmol/L; range=N/A
+* Potassium [Moles/volume] in Serum or Plasma
+  value=3.8; unit=mmol/L; range=N/A
+* Chloride [Moles/volume] in Serum or Plasma
+  value=104.7; unit=mmol/L; range=N/A
+* Carbon dioxide  total [Moles/volume] in Serum or Plasma
+  value=27.3; unit=mmol/L; range=N/A
+* Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M
+  value=119.5; unit=mL/min/{1.73_m2}; range=N/A

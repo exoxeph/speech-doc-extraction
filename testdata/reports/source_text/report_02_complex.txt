@@ -1,0 +1,34 @@
+MARTHA'S VINEYARD HOSPITAL INC - Clinical Laboratory
+Collected / Reported: 08 Jan 2017
+Accession: SYN-5D84E6A3
+
+PATIENT
+  Name .......... Elizbeth263 Lueilwitz711
+  DOB / Sex ..... 1984-08-19 / F
+  Age ........... 32
+
+CHEMISTRY AND RELATED RESULTS
+01. Glucose [Mass/volume] in Serum or Plasma
+    Observed Value: 117.8 mg/dL    Reference Range: N/A
+02. Urea nitrogen [Mass/volume] in Serum or Plasma
+    Observed Value: 16.1 mg/dL    Reference Range: N/A
+03. Creatinine [Mass/volume] in Serum or Plasma
+    Observed Value: 2.0 mg/dL    Reference Range: N/A
+04. Calcium [Mass/volume] in Serum or Plasma
+    Observed Value: 9.7 mg/dL    Reference Range: N/A
+05. Sodium [Moles/volume] in Serum or Plasma
+    Observed Value: 137.4 mmol/L    Reference Range: N/A
+06. Potassium [Moles/volume] in Serum or Plasma
+    Observed Value: 4.0 mmol/L    Reference Range: N/A
+07. Chloride [Moles/volume] in Serum or Plasma
+    Observed Value: 101.0 mmol/L    Reference Range: N/A
+08. Carbon dioxide  total [Moles/volume] in Serum or Plasma
+    Observed Value: 26.0 mmol/L    Reference Range: N/A
+09. Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M
+    Observed Value: 57.3 mL/min/{1.73_m2}    Reference Range: N/A
+10. Glucose [Mass/volume] in Urine by Test strip
+    Observed Value: 1.7 mg/dL    Reference Range: N/A
+11. Bilirubin.total [Mass/volume] in Urine by Test strip
+    Observed Value: 1.2 mg/dL    Reference Range: N/A
+12. Ketones [Mass/volume] in Urine by Test strip
+    Observed Value: 15.4 mg/dL    Reference Range: N/A

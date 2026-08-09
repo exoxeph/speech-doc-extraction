@@ -1,0 +1,907 @@
+{
+  "purpose": "Source text fixtures for Endpoint 2 document extraction tests. All clinical-looking content is synthetic and derived from local Synthea CSV exports.",
+  "source_files": {
+    "patients": "synthea/patients.csv",
+    "encounters": "synthea/encounters.csv",
+    "organizations": "synthea/organizations.csv",
+    "observations": "synthea/observations.csv"
+  },
+  "global_rules": [
+    "Observation VALUE and UNITS are copied exactly from observations.csv.",
+    "Reference ranges are N/A because observations.csv does not contain reference range fields.",
+    "Reference numbers are deterministic display IDs built from the source encounter UUID prefix.",
+    "Report dates are display-formatted from the observation DATE calendar date.",
+    "Patient names, birth dates, sex, encounter IDs, organization names, test names, values, and units come from Synthea synthetic CSV data.",
+    "All report fixtures are Synthea-derived unless source_type says otherwise; report_04_normalization_edge_cases.txt is purpose-built synthetic parser/OCR data."
+  ],
+  "reports": [
+    {
+      "file": "testdata/reports/source_text/report_01_standard.txt",
+      "layout": "standard_table",
+      "display_fields": {
+        "patient_name": "Guadalupe206 Valencia279",
+        "date_of_birth": "1954-04-26",
+        "age_at_report_date": 60,
+        "sex": "F",
+        "report_date_source": "2014-06-30",
+        "report_date_display": "2014-06-30",
+        "reference_no": "SYN-7AD140AB",
+        "facility": "LYNN URGENT CARE LLC"
+      },
+      "source_trace": {
+        "patients_csv": {
+          "row": 16,
+          "id": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+          "fields": [
+            "FIRST",
+            "MIDDLE",
+            "LAST",
+            "BIRTHDATE",
+            "GENDER"
+          ]
+        },
+        "encounters_csv": {
+          "row": 518,
+          "id": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+          "fields": [
+            "Id",
+            "PATIENT",
+            "ORGANIZATION"
+          ]
+        },
+        "organizations_csv": {
+          "row": 24,
+          "id": "a14e698d-a9ba-3eae-9c8b-682ec726433d",
+          "fields": [
+            "NAME"
+          ]
+        }
+      },
+      "results": [
+        {
+          "line_source": "Glucose [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4929,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "2345-7",
+            "description": "Glucose [Mass/volume] in Serum or Plasma",
+            "value": "98.4",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glucose [Mass/volume] in Serum or Plasma",
+            "value": "98.4",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4930,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "3094-0",
+            "description": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+            "value": "11.2",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+            "value": "11.2",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Creatinine [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4931,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "2160-0",
+            "description": "Creatinine [Mass/volume] in Serum or Plasma",
+            "value": "1.9",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Creatinine [Mass/volume] in Serum or Plasma",
+            "value": "1.9",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Calcium [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4932,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "17861-6",
+            "description": "Calcium [Mass/volume] in Serum or Plasma",
+            "value": "8.8",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Calcium [Mass/volume] in Serum or Plasma",
+            "value": "8.8",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Sodium [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4933,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "2951-2",
+            "description": "Sodium [Moles/volume] in Serum or Plasma",
+            "value": "139.6",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Sodium [Moles/volume] in Serum or Plasma",
+            "value": "139.6",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Potassium [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4934,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "2823-3",
+            "description": "Potassium [Moles/volume] in Serum or Plasma",
+            "value": "4.1",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Potassium [Moles/volume] in Serum or Plasma",
+            "value": "4.1",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Chloride [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4935,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "2075-0",
+            "description": "Chloride [Moles/volume] in Serum or Plasma",
+            "value": "101.5",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Chloride [Moles/volume] in Serum or Plasma",
+            "value": "101.5",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 4936,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "2028-9",
+            "description": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+            "value": "21.9",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+            "value": "21.9",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+          "observation_csv": {
+            "row": 4937,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "33914-3",
+            "description": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+            "value": "53.2",
+            "units": "mL/min/{1.73_m2}",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+            "value": "53.2",
+            "unit": "mL/min/{1.73_m2}",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Glucose [Mass/volume] in Urine by Test strip",
+          "observation_csv": {
+            "row": 4942,
+            "patient": "7ad140ab-bfae-c3ae-20a3-2244b1c4d0e2",
+            "encounter": "7ad140ab-bfae-c3ae-f958-f1a58b2fe45e",
+            "date": "2014-06-30T07:01:15Z",
+            "category": "laboratory",
+            "code": "5792-7",
+            "description": "Glucose [Mass/volume] in Urine by Test strip",
+            "value": "0.9",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glucose [Mass/volume] in Urine by Test strip",
+            "value": "0.9",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        }
+      ]
+    },
+    {
+      "file": "testdata/reports/source_text/report_02_complex.txt",
+      "layout": "complex_panel",
+      "display_fields": {
+        "patient_name": "Elizbeth263 Lueilwitz711",
+        "date_of_birth": "1984-08-19",
+        "age_at_report_date": 32,
+        "sex": "F",
+        "report_date_source": "2017-01-08",
+        "report_date_display": "08 Jan 2017",
+        "reference_no": "SYN-5D84E6A3",
+        "facility": "MARTHA'S VINEYARD HOSPITAL INC"
+      },
+      "source_trace": {
+        "patients_csv": {
+          "row": 36,
+          "id": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+          "fields": [
+            "FIRST",
+            "MIDDLE",
+            "LAST",
+            "BIRTHDATE",
+            "GENDER"
+          ]
+        },
+        "encounters_csv": {
+          "row": 2370,
+          "id": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+          "fields": [
+            "Id",
+            "PATIENT",
+            "ORGANIZATION"
+          ]
+        },
+        "organizations_csv": {
+          "row": 127,
+          "id": "ce4d0501-49eb-396a-bc56-545fdfc624b0",
+          "fields": [
+            "NAME"
+          ]
+        }
+      },
+      "results": [
+        {
+          "line_source": "Glucose [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29499,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "2345-7",
+            "description": "Glucose [Mass/volume] in Serum or Plasma",
+            "value": "117.8",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glucose [Mass/volume] in Serum or Plasma",
+            "value": "117.8",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29500,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "3094-0",
+            "description": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+            "value": "16.1",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+            "value": "16.1",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Creatinine [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29501,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "2160-0",
+            "description": "Creatinine [Mass/volume] in Serum or Plasma",
+            "value": "2.0",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Creatinine [Mass/volume] in Serum or Plasma",
+            "value": "2.0",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Calcium [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29502,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "17861-6",
+            "description": "Calcium [Mass/volume] in Serum or Plasma",
+            "value": "9.7",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Calcium [Mass/volume] in Serum or Plasma",
+            "value": "9.7",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Sodium [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29503,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "2951-2",
+            "description": "Sodium [Moles/volume] in Serum or Plasma",
+            "value": "137.4",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Sodium [Moles/volume] in Serum or Plasma",
+            "value": "137.4",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Potassium [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29504,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "2823-3",
+            "description": "Potassium [Moles/volume] in Serum or Plasma",
+            "value": "4.0",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Potassium [Moles/volume] in Serum or Plasma",
+            "value": "4.0",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Chloride [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29505,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "2075-0",
+            "description": "Chloride [Moles/volume] in Serum or Plasma",
+            "value": "101.0",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Chloride [Moles/volume] in Serum or Plasma",
+            "value": "101.0",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 29506,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "2028-9",
+            "description": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+            "value": "26.0",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+            "value": "26.0",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+          "observation_csv": {
+            "row": 29507,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "33914-3",
+            "description": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+            "value": "57.3",
+            "units": "mL/min/{1.73_m2}",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+            "value": "57.3",
+            "unit": "mL/min/{1.73_m2}",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Glucose [Mass/volume] in Urine by Test strip",
+          "observation_csv": {
+            "row": 29512,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "5792-7",
+            "description": "Glucose [Mass/volume] in Urine by Test strip",
+            "value": "1.7",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glucose [Mass/volume] in Urine by Test strip",
+            "value": "1.7",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Bilirubin.total [Mass/volume] in Urine by Test strip",
+          "observation_csv": {
+            "row": 29514,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "20505-4",
+            "description": "Bilirubin.total [Mass/volume] in Urine by Test strip",
+            "value": "1.2",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Bilirubin.total [Mass/volume] in Urine by Test strip",
+            "value": "1.2",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Ketones [Mass/volume] in Urine by Test strip",
+          "observation_csv": {
+            "row": 29516,
+            "patient": "5d84e6a3-b4bd-63d6-57c5-cada0916490d",
+            "encounter": "5d84e6a3-b4bd-63d6-2e52-092b306bf296",
+            "date": "2017-01-08T04:58:52Z",
+            "category": "laboratory",
+            "code": "5797-6",
+            "description": "Ketones [Mass/volume] in Urine by Test strip",
+            "value": "15.4",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Ketones [Mass/volume] in Urine by Test strip",
+            "value": "15.4",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        }
+      ]
+    },
+    {
+      "file": "testdata/reports/source_text/report_03_alternate_layout.txt",
+      "layout": "alternate_blocks",
+      "display_fields": {
+        "patient_name": "Rogelio17 Pacocha935",
+        "date_of_birth": "1969-10-07",
+        "age_at_report_date": 50,
+        "sex": "M",
+        "report_date_source": "2019-11-26",
+        "report_date_display": "November 26, 2019",
+        "reference_no": "SYN-01A006CE",
+        "facility": "PRIMARY CARE ASSOCIATES LLC"
+      },
+      "source_trace": {
+        "patients_csv": {
+          "row": 95,
+          "id": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+          "fields": [
+            "FIRST",
+            "MIDDLE",
+            "LAST",
+            "BIRTHDATE",
+            "GENDER"
+          ]
+        },
+        "encounters_csv": {
+          "row": 4811,
+          "id": "01a006ce-6457-50c2-c761-009346b245d9",
+          "fields": [
+            "Id",
+            "PATIENT",
+            "ORGANIZATION"
+          ]
+        },
+        "organizations_csv": {
+          "row": 52,
+          "id": "ecadbc11-930c-3903-b706-f8ef4bc9089e",
+          "fields": [
+            "NAME"
+          ]
+        }
+      },
+      "results": [
+        {
+          "line_source": "Glucose [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63146,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "2345-7",
+            "description": "Glucose [Mass/volume] in Serum or Plasma",
+            "value": "84.2",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glucose [Mass/volume] in Serum or Plasma",
+            "value": "84.2",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63147,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "3094-0",
+            "description": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+            "value": "16.7",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+            "value": "16.7",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Creatinine [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63148,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "2160-0",
+            "description": "Creatinine [Mass/volume] in Serum or Plasma",
+            "value": "1.4",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Creatinine [Mass/volume] in Serum or Plasma",
+            "value": "1.4",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Calcium [Mass/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63149,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "17861-6",
+            "description": "Calcium [Mass/volume] in Serum or Plasma",
+            "value": "10.1",
+            "units": "mg/dL",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Calcium [Mass/volume] in Serum or Plasma",
+            "value": "10.1",
+            "unit": "mg/dL",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Sodium [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63150,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "2951-2",
+            "description": "Sodium [Moles/volume] in Serum or Plasma",
+            "value": "142.4",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Sodium [Moles/volume] in Serum or Plasma",
+            "value": "142.4",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Potassium [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63151,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "2823-3",
+            "description": "Potassium [Moles/volume] in Serum or Plasma",
+            "value": "3.8",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Potassium [Moles/volume] in Serum or Plasma",
+            "value": "3.8",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Chloride [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63152,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "2075-0",
+            "description": "Chloride [Moles/volume] in Serum or Plasma",
+            "value": "104.7",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Chloride [Moles/volume] in Serum or Plasma",
+            "value": "104.7",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+          "observation_csv": {
+            "row": 63153,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "2028-9",
+            "description": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+            "value": "27.3",
+            "units": "mmol/L",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Carbon dioxide  total [Moles/volume] in Serum or Plasma",
+            "value": "27.3",
+            "unit": "mmol/L",
+            "reference_range": "N/A"
+          }
+        },
+        {
+          "line_source": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+          "observation_csv": {
+            "row": 63154,
+            "patient": "01a006ce-6457-50c2-8e0a-fb58fc310a86",
+            "encounter": "01a006ce-6457-50c2-c761-009346b245d9",
+            "date": "2019-11-26T00:02:02Z",
+            "category": "laboratory",
+            "code": "33914-3",
+            "description": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+            "value": "119.5",
+            "units": "mL/min/{1.73_m2}",
+            "type": "numeric"
+          },
+          "expected_extraction": {
+            "test_name": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M",
+            "value": "119.5",
+            "unit": "mL/min/{1.73_m2}",
+            "reference_range": "N/A"
+          }
+        }
+      ]
+    },
+    {
+      "file": "testdata/reports/source_text/report_04_normalization_edge_cases.txt",
+      "layout": "normalization_edge_cases_table",
+      "source_type": "purpose_built_synthetic",
+      "purpose": "Exercises parser and OCR normalization cases explicitly named by the assignment: inequality values, comma thousands, scientific notation text, range-like values, unit spelling/case variants, micro-liter units, and abnormal flags.",
+      "display_fields": {
+        "patient_name": "Test Patient",
+        "age": 35,
+        "sex": "F",
+        "report_date_display": "08/09/2026",
+        "reference_no": "TEST-NORM-001",
+        "facility": "SYNTHETIC DIAGNOSTIC LAB"
+      },
+      "source_trace": {
+        "synthea_csv": null,
+        "note": "This report is intentionally not derived from Synthea rows. It is synthetic parser/OCR fixture data for required normalization edge cases."
+      },
+      "results": [
+        {
+          "test_name": "Hemoglobin",
+          "value": "10.5",
+          "unit": "g/dL",
+          "reference_range": "12.0 - 16.0",
+          "flag": "L"
+        },
+        {
+          "test_name": "CRP",
+          "value": "<0.5",
+          "unit": "mg/dL",
+          "reference_range": "<1.0",
+          "flag": "N/A"
+        },
+        {
+          "test_name": "Platelet Count",
+          "value": "12,500",
+          "unit": "10^3/µL",
+          "reference_range": "10,000 - 15,000",
+          "flag": "N/A"
+        },
+        {
+          "test_name": "Cell Count",
+          "value": "1.2 x 10^3",
+          "unit": "10^3/µL",
+          "reference_range": "1.0 - 2.0",
+          "flag": "N/A"
+        },
+        {
+          "test_name": "Test Ratio",
+          "value": "0.8 - 1.2",
+          "unit": "mmol/L",
+          "reference_range": "N/A",
+          "flag": "N/A"
+        },
+        {
+          "test_name": "Glucose",
+          "value": "180",
+          "unit": "mg/dL",
+          "reference_range": "70 - 100",
+          "flag": "H"
+        },
+        {
+          "test_name": "Albumin",
+          "value": "3.7",
+          "unit": "gm/dl",
+          "reference_range": "3.5 - 5.0",
+          "flag": "N/A"
+        }
+      ]
+    },
+    {
+      "file": "testdata/reports/source_text/non_lab_receipt.txt",
+      "layout": "receipt_plain_text",
+      "source_type": "purpose_built_negative_fixture",
+      "purpose": "Non-lab document used to test that Endpoint 2 does not classify ordinary receipt text as a lab report.",
+      "expected_document_type": "non_lab_report",
+      "display_fields": {
+        "merchant": "COFFEE SHOP",
+        "items": [
+          {
+            "name": "Coffee",
+            "amount": "4.50"
+          },
+          {
+            "name": "Sandwich",
+            "amount": "8.25"
+          },
+          {
+            "name": "Tax",
+            "amount": "1.10"
+          },
+          {
+            "name": "Total",
+            "amount": "13.85"
+          }
+        ]
+      },
+      "source_trace": {
+        "synthea_csv": null,
+        "note": "This is a user-provided negative fixture and is not derived from Synthea."
+      },
+      "results": []
+    }
+  ]
+}

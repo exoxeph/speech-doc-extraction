@@ -1,0 +1,6 @@
+COFFEE SHOP
+
+Coffee          4.50
+Sandwich        8.25
+Tax             1.10
+Total           13.85
