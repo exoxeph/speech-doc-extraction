@@ -191,7 +191,7 @@ Multipart form data:
 ```bash
 curl -X POST \
   http://localhost:8000/api/v1/documents/extract \
-  -F "file=@testdata/reports/report_clean.jpg"
+  -F "file=@path/to/lab-report.jpg"
 ```
 
 #### Response
@@ -329,15 +329,19 @@ Ground-truth transcripts are stored in:
 testdata/audio/reference_transcripts.json
 ```
 
-### Report Dataset
+### Endpoint 2 Report Dataset
 
-Synthetic lab-report images are stored in:
+Endpoint 2 uses synthetic lab-report content derived from Synthea CSV exports. The source text fixtures are stored in:
 
 ```text
-testdata/reports/
+testdata/reports/source_text/
 ```
 
-The report set contains clean, angled, dark, cropped, rotated, and non-lab receipt images. They are generated with synthetic patient data so the repository does not contain real medical records.
+The Synthea-derived fixtures use synthetic patient demographics, encounter/facility data, test names, values, and units from the local Synthea dataset. Reference ranges are marked `N/A` where Synthea does not provide them.
+
+For Endpoint 2 image testing, these synthetic report texts were displayed on-screen and photographed with a phone under varied conditions. Some captures intentionally include minor surrounding UI or screen context. This keeps the data realistic for OCR while avoiding real medical records.
+
+The dataset also includes purpose-built synthetic fixtures for parser normalization edge cases and a non-lab receipt negative case.
 
 Reference metadata is stored in:
 
