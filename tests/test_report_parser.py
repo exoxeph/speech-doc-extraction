@@ -61,3 +61,31 @@ def test_parse_laboratory_result_rows_skips_non_result_lines() -> None:
 
     assert len(results) == 1
     assert results[0].test_name == "Hemoglobin"
+
+
+def test_parse_collapsed_ocr_result_row_preserves_raw_line() -> None:
+    raw_line = "Hemoglobin 12.5 gm/di 13.0 - 17.0 L"
+
+    result = parse_lab_result_row(raw_line)
+
+    assert result is not None
+    assert result.test_name == "Hemoglobin"
+    assert result.value.numeric == 12.5
+    assert result.unit == "gm/di"
+    assert result.reference_range == "13.0 - 17.0"
+    assert result.flag == "L"
+    assert result.raw_line == raw_line
+
+
+def test_parse_collapsed_ocr_result_row_with_comma_range() -> None:
+    raw_line = "WBC Count 12,500 10*3/uL 4,000- 11,000 H"
+
+    result = parse_lab_result_row(raw_line)
+
+    assert result is not None
+    assert result.test_name == "WBC Count"
+    assert result.value.numeric == 12500.0
+    assert result.unit == "10*3/uL"
+    assert result.reference_range == "4,000- 11,000"
+    assert result.flag == "H"
+    assert result.raw_line == raw_line
