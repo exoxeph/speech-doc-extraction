@@ -85,3 +85,9 @@ def test_parse_metadata_from_tesseract_clean_report_lines() -> None:
     assert meta.report_date == "2014-06-30"
     assert meta.lab_name == "LYNN URGENT CARE LLC"
     assert meta.reference_no == "SYN-7AD140AB"
+
+
+def test_parse_metadata_strips_ocr_punctuation_after_label() -> None:
+    meta = parse_lab_report_meta(["patient Name; Guadalupe206 valencia279"])
+
+    assert meta.patient_name == "Guadalupe206 valencia279"

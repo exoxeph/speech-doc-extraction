@@ -26,10 +26,14 @@ def _find_labeled_value(lines: list[str], labels: list[str]) -> str | None:
                 flags=re.IGNORECASE,
             )
             if match:
-                value = match.group("value").strip()
+                value = _clean_labeled_value(match.group("value"))
                 return value or None
 
     return None
+
+
+def _clean_labeled_value(value: str) -> str:
+    return value.strip().lstrip(":;#.- ").strip()
 
 
 def _find_age(lines: list[str]) -> str | None:
