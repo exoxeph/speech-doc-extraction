@@ -399,15 +399,49 @@ Lab result values use a structured representation:
 
 ```json
 {
+  "kind": "scalar",
   "numeric": 0.5,
   "operator": "<",
+  "range": null,
   "raw": "<0.5"
 }
 ```
 
-Supported numeric formats include plain decimals, comma thousands, qualified values such as `<0.5`, and simple scientific notation such as `1.2 x 10^3`.
+Range-valued results preserve both numeric endpoints instead of inventing a scalar:
 
-Ambiguous values such as standalone ranges are not converted into a result value. Unknown units are preserved verbatim, and only known aliases such as `gm/dl -> g/dL` are canonicalized.
+```json
+{
+  "kind": "range",
+  "numeric": null,
+  "operator": null,
+  "range": {
+    "lower": 0.8,
+    "upper": 1.2
+  },
+  "raw": "0.8 - 1.2"
+}
+```
+
+Supported value formats include plain decimals, comma thousands, qualified values such as `<0.5`, simple scientific notation such as `1.2 x 10^3`, and numeric ranges such as `0.8 - 1.2`.
+
+Malformed or ambiguous OCR values are not guessed. Unknown units are preserved verbatim, and only known aliases such as `gm/dl -> g/dL` are canonicalized.
+
+## Document OCR Evaluation
+
+The real `tesseract` OCR provider was manually evaluated against the acquired Endpoint 2 report images.
+
+| Sample | Document type | Results | Result |
+|---|---|---:|---|
+| `report_01_standard_clean.jpg` | `lab_report` | 9 | Good metadata and structured rows; one GFR test name is split/noisy from OCR. |
+| `report_01_standard_angled.jpg` | `lab_report` | 8 | Mostly usable; patient name was missed and some unit/range OCR noise remains. |
+| `report_02_complex_dark.jpg` | `lab_report` | 7 | Degraded OCR; parser recovers rows, but some values are OCR-misread. |
+| `report_02_complex_cropped.jpg` | `lab_report` | 4 | Header is cropped out, so metadata is null; partial rows are recovered. |
+| `report_03_alternate_rotated.jpg` | `lab_report` | 7 | Recovered via OCR fallback; metadata is partial and OCR text is noisy. |
+| `report_04_normalization_clean.jpg` | `lab_report` | 5 | Scalar, qualified, thousands, and range values are represented; OCR misreads are preserved rather than corrected. |
+| `report_04_normalization_angled.jpg` | `lab_report` | 1 | OCR quality is poor; only one noisy row is recovered. |
+| `not_lab_receipt.jpg` | `unknown` | 0 | Passed non-lab handling; no fake lab results are produced. |
+
+Observed OCR-level limitations are intentionally not corrected using fixture source knowledge. For example, Tesseract read `CRP <0.5` as `RP <8.5`, and read `1.2 x 10^3` as `1.2 x 1043`; the service preserves the OCR evidence instead of silently substituting expected source text.
 
 ## Design Decisions
 
