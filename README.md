@@ -2,7 +2,7 @@
 
 A FastAPI service for speech transcription and structured medical lab-report extraction.
 
-The current implementation focuses on the transcription endpoint. It supports English, Bengali, and automatic language mode through a configurable provider adapter, with a deterministic mock provider for reproducible local and Docker testing.
+The implementation includes transcription and lab-report extraction endpoints. Both AI-facing workflows use configurable provider adapters, with deterministic mock providers for reproducible local and Docker testing.
 
 ## Features
 
@@ -17,7 +17,15 @@ The current implementation focuses on the transcription endpoint. It supports En
 - 25 MB upload limit
 - explicit handling of silence and no-speech audio
 
-Lab report extraction will be added as Endpoint 2.
+### Lab Report Extraction
+
+- `POST /api/v1/documents/extract`
+- JPEG and PNG upload validation
+- configurable mock and real OCR providers
+- provider-independent metadata and result models
+- conservative non-lab document handling
+- exact `raw_line` preservation for extracted result rows
+- numeric value, unit, and date normalization
 
 ## Quick Start
 
@@ -82,6 +90,8 @@ The first real-provider run may download the Whisper model. The default Docker p
 |---|---|---|
 | `TRANSCRIPTION_PROVIDER` | `mock` | Transcription adapter to use. Supported values: `mock`, `faster-whisper`. |
 | `MOCK_TRANSCRIPTION_RESPONSE_DIR` | `testdata/mock_responses/transcription` | Directory containing mock transcription responses. |
+| `OCR_PROVIDER` | `mock` | OCR adapter to use. Supported values: `mock`, `tesseract`. |
+| `MOCK_OCR_RESPONSE_DIR` | `testdata/mock_responses/ocr` | Directory containing mock OCR responses. |
 
 The repository does not contain credentials. Local `.env` files are ignored by Git.
 
@@ -166,7 +176,72 @@ This distinguishes valid audio containing no speech from an invalid upload.
 
 ### `POST /api/v1/documents/extract`
 
-Reserved for Endpoint 2.
+Extracts structured data from an uploaded English medical lab report image.
+
+#### Request
+
+Multipart form data:
+
+| Field | Description |
+|---|---|
+| `file` | Report image. Supported extensions: `jpg`, `jpeg`, `png`. |
+
+#### Example
+
+```bash
+curl -X POST \
+  http://localhost:8000/api/v1/documents/extract \
+  -F "file=@testdata/reports/report_clean.jpg"
+```
+
+#### Response
+
+```json
+{
+  "document_type": "lab_report",
+  "meta": {
+    "patient_name": "John Doe",
+    "age": "28",
+    "sex": "Male",
+    "report_date": "2026-08-07",
+    "lab_name": "ABC Diagnostic Centre",
+    "reference_no": "R12345"
+  },
+  "results": [
+    {
+      "test_name": "Hemoglobin",
+      "value": {
+        "numeric": 12.5,
+        "operator": null,
+        "raw": "12.5"
+      },
+      "unit": "g/dL",
+      "reference_range": "13.0 - 17.0",
+      "flag": "L",
+      "raw_line": "Hemoglobin    12.5    gm/dl    13.0 - 17.0    L"
+    }
+  ],
+  "provider": "mock"
+}
+```
+
+For non-lab documents, the service returns:
+
+```json
+{
+  "document_type": "unknown",
+  "meta": {
+    "patient_name": null,
+    "age": null,
+    "sex": null,
+    "report_date": null,
+    "lab_name": null,
+    "reference_no": null
+  },
+  "results": [],
+  "provider": "mock"
+}
+```
 
 ## Architecture
 
@@ -199,7 +274,7 @@ Provider-specific integration. Model or provider SDK imports are contained withi
 
 ### Provider Adapter Pattern
 
-Both transcription providers implement the same provider contract:
+Transcription providers implement the same provider contract:
 
 ```text
 TranscriptionProvider
@@ -209,11 +284,23 @@ TranscriptionProvider
 
 The active implementation is selected through environment configuration rather than source-code changes.
 
+OCR providers follow the same pattern:
+
+```text
+OCRProvider
+  -> MockOCRAdapter
+  -> TesseractOCRAdapter
+```
+
 ### Mock Transcription Provider
 
 The default configuration uses a deterministic mock provider. The mock adapter reads recorded provider responses from disk, makes no network request, and loads no ML model.
 
 This allows the full API path to run from a clean clone through Docker without credentials or model downloads.
+
+### Mock OCR Provider
+
+The mock OCR adapter reads recorded OCR lines from JSON fixtures and preserves line text exactly. This makes parser behavior deterministic and allows `raw_line` preservation to be tested without OCR engine variability.
 
 ## Test Data
 
@@ -242,6 +329,22 @@ Ground-truth transcripts are stored in:
 testdata/audio/reference_transcripts.json
 ```
 
+### Report Dataset
+
+Synthetic lab-report images are stored in:
+
+```text
+testdata/reports/
+```
+
+The report set contains clean, angled, dark, cropped, rotated, and non-lab receipt images. They are generated with synthetic patient data so the repository does not contain real medical records.
+
+Reference metadata is stored in:
+
+```text
+testdata/reports/reference_reports.json
+```
+
 ## Testing
 
 Run:
@@ -250,18 +353,25 @@ Run:
 pytest -q
 ```
 
-The transcription tests cover:
+The tests cover:
 
 - successful mock-backed transcription
+- successful mock-backed document extraction
 - Bengali, English, and automatic language values
 - unsupported language values
 - unsupported audio formats
+- unsupported and malformed document uploads
 - files over the 25 MB limit
 - silence/no-speech behavior
 - response structure
 - provider selection from typed settings
 - service/provider injection
 - real-provider adapter mapping with a fake model
+- OCR provider adapter mapping with a fake runner
+- lab metadata parsing
+- numeric value, unit, and date normalization
+- result-row parsing with exact `raw_line` preservation
+- conservative non-lab document handling
 - testdata reference integrity
 
 ## Transcription Evaluation
@@ -281,11 +391,23 @@ The real `faster-whisper` provider was manually evaluated against the recorded M
 
 ## Value Normalization
 
-Reserved for Endpoint 2 lab-report extraction.
+Lab result values use a structured representation:
+
+```json
+{
+  "numeric": 0.5,
+  "operator": "<",
+  "raw": "<0.5"
+}
+```
+
+Supported numeric formats include plain decimals, comma thousands, qualified values such as `<0.5`, and simple scientific notation such as `1.2 x 10^3`.
+
+Ambiguous values such as standalone ranges are not converted into a result value. Unknown units are preserved verbatim, and only known aliases such as `gm/dl -> g/dL` are canonicalized.
 
 ## Design Decisions
 
-Consequential implementation decisions and rejected alternatives will be documented in `DECISIONS.md`.
+Consequential implementation decisions and rejected alternatives are documented in [`DECISIONS.md`](DECISIONS.md).
 
 ## Known Limitations
 
@@ -293,4 +415,5 @@ Consequential implementation decisions and rejected alternatives will be documen
 - Code-switched Bengali-English audio is unreliable with the current real provider.
 - The evaluation dataset is intentionally small and is not a statistically representative ASR benchmark.
 - Real-provider execution may require network access for the first model download. The default Docker configuration uses the mock provider.
-- Endpoint 2 lab-report extraction is not implemented yet.
+- Tesseract OCR works on clean synthetic reports but degrades on rotated and angled images.
+- The parser preserves OCR mistakes in `raw_line` and unknown units rather than silently correcting them.
