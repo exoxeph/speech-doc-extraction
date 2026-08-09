@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from fastapi import APIRouter, File, UploadFile
+from fastapi.responses import JSONResponse
 
 from app.adapters.ocr.factory import create_ocr_provider
 from app.api.schemas.documents import (
@@ -13,6 +16,7 @@ from app.services.models import DocumentExtractionResult
 
 
 router = APIRouter(prefix="/api/v1/documents", tags=["documents"])
+SUPPORTED_DOCUMENT_EXTENSIONS = {".jpg", ".jpeg", ".png"}
 
 
 def get_document_extraction_service() -> DocumentExtractionService:
@@ -22,11 +26,42 @@ def get_document_extraction_service() -> DocumentExtractionService:
 
 
 @router.post("/extract", response_model=DocumentExtractionResponse)
-async def extract_document(file: UploadFile = File(...)) -> DocumentExtractionResponse:
+async def extract_document(
+    file: UploadFile = File(...),
+) -> DocumentExtractionResponse | JSONResponse:
+    file_extension = Path(file.filename or "").suffix.lower()
+    if file_extension not in SUPPORTED_DOCUMENT_EXTENSIONS:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "error": {
+                    "code": "UNSUPPORTED_DOCUMENT_FORMAT",
+                    "message": "Supported document formats are jpg, jpeg and png.",
+                }
+            },
+        )
+
     document = await file.read()
+    if not _has_supported_image_signature(document):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "error": {
+                    "code": "MALFORMED_DOCUMENT",
+                    "message": "Uploaded document is not a valid jpg, jpeg or png image.",
+                }
+            },
+        )
+
     service = get_document_extraction_service()
     result = await service.extract(document)
     return _to_response(result)
+
+
+def _has_supported_image_signature(document: bytes) -> bool:
+    return document.startswith(b"\xff\xd8\xff") or document.startswith(
+        b"\x89PNG\r\n\x1a\n"
+    )
 
 
 def _to_response(result: DocumentExtractionResult) -> DocumentExtractionResponse:

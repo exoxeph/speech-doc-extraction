@@ -23,7 +23,7 @@ class MockOCRAdapter:
 
 def _fixture_name_from_document(document: bytes) -> str:
     marker = document.decode("utf-8", errors="ignore").strip()
-    if marker:
+    if marker in {"normal_report", "difficult_report", "not_lab_report"}:
         return marker
 
     return "normal_report"
