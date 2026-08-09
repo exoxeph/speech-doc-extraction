@@ -49,18 +49,7 @@ FastAPI documentation:
 http://localhost:8000/docs
 ```
 
-The image also installs the Tesseract OCR binary so the optional real Endpoint 2 OCR provider can run from the same clean build. Mock OCR remains the submission-safe default in `docker-compose.yml`.
-
-To run the container with real OCR manually:
-
-```bash
-docker compose run --rm \
-  -e OCR_PROVIDER=tesseract \
-  -p 8001:8000 \
-  api
-```
-
-Then upload report images over HTTP to `http://localhost:8001`; photographed report fixtures do not need to be copied into the image.
+Docker is intentionally mock-only for submission reproducibility. It does not install Tesseract or package/download real transcription models. Real providers remain available through configuration for local/manual evaluation outside the default Docker path.
 
 ### Local Development
 
@@ -96,6 +85,16 @@ TRANSCRIPTION_PROVIDER=faster-whisper
 ```
 
 The first real-provider run may download the Whisper model. The default Docker path does not use this provider.
+
+### Real OCR Provider
+
+The real OCR adapter uses the `tesseract` command-line binary. Install Tesseract locally and set:
+
+```env
+OCR_PROVIDER=tesseract
+```
+
+The default Docker path does not use this provider.
 
 ## Configuration
 

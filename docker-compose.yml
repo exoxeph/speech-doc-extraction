@@ -3,6 +3,8 @@ services:
     build: .
     environment:
       TRANSCRIPTION_PROVIDER: mock
+      OCR_PROVIDER: mock
       MOCK_TRANSCRIPTION_RESPONSE_DIR: testdata/mock_responses/transcription
+      MOCK_OCR_RESPONSE_DIR: testdata/mock_responses/ocr
     ports:
       - "8000:8000"
