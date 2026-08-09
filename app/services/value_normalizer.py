@@ -1,6 +1,6 @@
 import re
 
-from app.services.models import LabValue
+from app.services.models import LabValue, LabValueRange
 
 
 _PLAIN_NUMBER = re.compile(r"^[+-]?\d+(?:,\d{3})*(?:\.\d+)?$|^[+-]?\d+(?:\.\d+)?$")
@@ -8,7 +8,7 @@ _QUALIFIED_NUMBER = re.compile(
     r"^(?P<operator><=|>=|<|>)\s*(?P<number>[+-]?\d+(?:,\d{3})*(?:\.\d+)?|[+-]?\d+(?:\.\d+)?)$"
 )
 _SCIENTIFIC_NUMBER = re.compile(
-    r"^(?P<base>[+-]?\d+(?:\.\d+)?)\s*(?:x|\*)\s*10\^?(?P<exponent>[+-]?\d+)$",
+    r"^(?P<base>[+-]?\d+(?:\.\d+)?)\s*(?:x|\*)\s*10\^(?P<exponent>[+-]?\d+)$",
     flags=re.IGNORECASE,
 )
 _RANGE = re.compile(r"^[+-]?\d+(?:\.\d+)?\s*-\s*[+-]?\d+(?:\.\d+)?$")
@@ -22,12 +22,22 @@ def normalize_lab_value(text: str) -> LabValue | None:
     normalized_candidate = _normalize_ocr_number_text(candidate)
 
     if _RANGE.match(normalized_candidate):
-        return None
+        lower_text, upper_text = re.split(r"\s*-\s*", normalized_candidate, maxsplit=1)
+        return LabValue(
+            kind="range",
+            numeric=None,
+            range=LabValueRange(
+                lower=_parse_number(lower_text),
+                upper=_parse_number(upper_text),
+            ),
+            raw=candidate,
+        )
 
     qualified = _QUALIFIED_NUMBER.match(normalized_candidate)
     if qualified:
         numeric = _parse_number(qualified.group("number"))
         return LabValue(
+            kind="scalar",
             numeric=numeric,
             operator=qualified.group("operator"),
             raw=candidate,
@@ -36,10 +46,14 @@ def normalize_lab_value(text: str) -> LabValue | None:
     scientific = _SCIENTIFIC_NUMBER.match(normalized_candidate)
     if scientific:
         numeric = float(scientific.group("base")) * (10 ** int(scientific.group("exponent")))
-        return LabValue(numeric=numeric, raw=candidate)
+        return LabValue(kind="scalar", numeric=numeric, raw=candidate)
 
     if _PLAIN_NUMBER.match(normalized_candidate):
-        return LabValue(numeric=_parse_number(normalized_candidate), raw=candidate)
+        return LabValue(
+            kind="scalar",
+            numeric=_parse_number(normalized_candidate),
+            raw=candidate,
+        )
 
     return None
 

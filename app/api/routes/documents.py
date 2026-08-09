@@ -8,6 +8,7 @@ from app.api.schemas.documents import (
     DocumentExtractionResponse,
     LabReportMetaResponse,
     LabResultResponse,
+    LabValueRangeResponse,
     LabValueResponse,
 )
 from app.config import get_settings
@@ -79,8 +80,17 @@ def _to_response(result: DocumentExtractionResult) -> DocumentExtractionResponse
             LabResultResponse(
                 test_name=item.test_name,
                 value=LabValueResponse(
+                    kind=item.value.kind,
                     numeric=item.value.numeric,
                     operator=item.value.operator,
+                    range=(
+                        LabValueRangeResponse(
+                            lower=item.value.range.lower,
+                            upper=item.value.range.upper,
+                        )
+                        if item.value.range is not None
+                        else None
+                    ),
                     raw=item.value.raw,
                 ),
                 unit=item.unit,

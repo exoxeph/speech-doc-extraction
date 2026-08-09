@@ -45,6 +45,38 @@ def test_parse_laboratory_result_row_handles_comma_value_and_flag() -> None:
     assert result.raw_line == raw_line
 
 
+def test_parse_collapsed_row_with_inequality_reference_range() -> None:
+    raw_line = "RP <8.5 mg/dL <1.0 N/A"
+
+    result = parse_lab_result_row(raw_line)
+
+    assert result is not None
+    assert result.test_name == "RP"
+    assert result.value.numeric == 8.5
+    assert result.value.operator == "<"
+    assert result.unit == "mg/dL"
+    assert result.reference_range == "<1.0"
+    assert result.flag == "N/A"
+
+
+def test_parse_collapsed_row_with_range_value() -> None:
+    raw_line = "Test Ratio 0.8 - 1.2 mmol/L N/A N/A"
+
+    result = parse_lab_result_row(raw_line)
+
+    assert result is not None
+    assert result.test_name == "Test Ratio"
+    assert result.value.kind == "range"
+    assert result.value.numeric is None
+    assert result.value.range is not None
+    assert result.value.range.lower == 0.8
+    assert result.value.range.upper == 1.2
+    assert result.value.raw == "0.8 - 1.2"
+    assert result.unit == "mmol/L"
+    assert result.reference_range == "N/A"
+    assert result.flag == "N/A"
+
+
 def test_parse_pipe_separated_ocr_result_row_preserves_raw_line() -> None:
     raw_line = 'Creatinine [Mass/volume] in Serum or Plasma | 1.9 | mg/d | "/a'
 

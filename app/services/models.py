@@ -21,9 +21,17 @@ class LabReportMeta:
 
 
 @dataclass(frozen=True)
+class LabValueRange:
+    lower: float
+    upper: float
+
+
+@dataclass(frozen=True)
 class LabValue:
-    numeric: float
+    numeric: float | None
+    kind: Literal["scalar", "range"] = "scalar"
     operator: str | None = None
+    range: LabValueRange | None = None
     raw: str | None = None
 
 

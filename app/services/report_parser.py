@@ -61,16 +61,17 @@ def _parse_pipe_result_row(line: str) -> LabResult | None:
 def _parse_collapsed_result_row(line: str) -> LabResult | None:
     match = re.match(
         r"^(?P<test_name>.+?)\s+"
-        r"(?P<value>(?:<=|>=|<|>)?\s*[+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s+"
-        r"(?P<unit>\S+)\s+"
-        r"(?P<reference_range>[+-]?\d+(?:,\d{3})*(?:\.\d+)?\s*-\s*[+-]?\d+(?:,\d{3})*(?:\.\d+)?)"
-        r"(?:\s+(?P<flag>[A-Za-z]+))?$",
+        r"(?P<value>(?:<=|>=|<|>)?\s*[+-]?\d+(?:,\d{3})*(?:\.\d+)?(?:\s*(?:x|\*)\s*10\^?\d+)?|[+-]?\d+(?:,\d{3})*(?:\.\d+)?\s*-\s*[+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s+"
+        r"(?P<unit>\S+/\S+|mmol/L3|mmol/L|mmol/t|mmol/i|10(?:\^|\*)3/\S+|1043/\S+)\s+"
+        r"(?P<reference_range>(?:<=|>=|<|>)?\s*[+-]?\d+(?:,\d{3})*(?:\.\d+)?(?:\s*-\s*[+-]?\d+(?:,\d{3})*(?:\.\d+)?)?|N/?A)"
+        r"(?:\s+(?P<flag>[A-Za-z/]+))?$",
         line,
+        flags=re.IGNORECASE,
     )
     if not match:
         return None
 
-    value = normalize_lab_value(match.group("value").replace(" ", ""))
+    value = normalize_lab_value(match.group("value"))
     if value is None:
         return None
 

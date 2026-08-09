@@ -10,9 +10,16 @@ class LabReportMetaResponse(BaseModel):
     reference_no: str | None
 
 
+class LabValueRangeResponse(BaseModel):
+    lower: float
+    upper: float
+
+
 class LabValueResponse(BaseModel):
-    numeric: float
+    kind: str
+    numeric: float | None
     operator: str | None
+    range: LabValueRangeResponse | None
     raw: str | None
 
 

@@ -1,5 +1,6 @@
 import subprocess
 import tempfile
+import re
 from collections.abc import Callable
 from pathlib import Path
 
@@ -23,10 +24,10 @@ class TesseractOCRAdapter:
 
         try:
             completed = self._run_tesseract(image_path)
-            if _ocr_signal_score(completed.stdout) < 8:
-                completed = _better_result(
-                    completed, self._run_tesseract(image_path, ["--psm", "6"])
-                )
+            completed = _better_result(
+                completed,
+                self._run_tesseract(image_path, ["--psm", "6"]),
+            )
             if _ocr_signal_score(completed.stdout) < 8:
                 for candidate_path in _create_preprocessed_candidates(image_path):
                     try:
@@ -101,7 +102,19 @@ def _ocr_signal_score(text: str | None) -> int:
             "range",
         ]
     )
-    return min(len(meaningful_lines), 3) + keyword_score
+    row_score = sum(1 for line in meaningful_lines if _looks_like_result_row(line))
+    return min(len(meaningful_lines), 3) + keyword_score + (row_score * 5)
+
+
+def _looks_like_result_row(line: str) -> bool:
+    return bool(
+        re.search(r"\d", line)
+        and re.search(
+            r"\b(?:mg/dl|g/dl|gm/dl|mmol/l|10\*?3/|10\^3/|m[l1]/min)\b",
+            line,
+            flags=re.IGNORECASE,
+        )
+    )
 
 
 def _create_preprocessed_candidates(image_path: Path) -> list[Path]:
