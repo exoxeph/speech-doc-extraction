@@ -31,7 +31,7 @@ The implementation includes transcription and lab-report extraction endpoints. B
 
 ### Docker
 
-The default Docker configuration uses the mock transcription provider and requires no credentials or model downloads.
+The default Docker configuration uses mock providers and requires no credentials, model downloads, or external services.
 
 ```bash
 docker compose up
@@ -48,6 +48,19 @@ FastAPI documentation:
 ```text
 http://localhost:8000/docs
 ```
+
+The image also installs the Tesseract OCR binary so the optional real Endpoint 2 OCR provider can run from the same clean build. Mock OCR remains the submission-safe default in `docker-compose.yml`.
+
+To run the container with real OCR manually:
+
+```bash
+docker compose run --rm \
+  -e OCR_PROVIDER=tesseract \
+  -p 8001:8000 \
+  api
+```
+
+Then upload report images over HTTP to `http://localhost:8001`; photographed report fixtures do not need to be copied into the image.
 
 ### Local Development
 
