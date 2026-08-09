@@ -27,6 +27,8 @@ class TesseractOCRAdapter:
                 check=True,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
             )
         finally:
             image_path.unlink(missing_ok=True)

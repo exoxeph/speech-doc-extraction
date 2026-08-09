@@ -10,6 +10,8 @@ from app.services.value_normalizer import normalize_lab_value
         ("12,500", 12500.0),
         ("1.2 x 10^3", 1200.0),
         ("1.2 * 10^3", 1200.0),
+        ("2,0", 2.0),
+        ("4.@", 4.0),
     ],
 )
 def test_normalize_supported_numeric_values(raw: str, expected: float) -> None:

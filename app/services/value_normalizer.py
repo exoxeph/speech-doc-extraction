@@ -49,4 +49,8 @@ def _parse_number(text: str) -> float:
 
 
 def _normalize_ocr_number_text(text: str) -> str:
-    return text.replace("Â©", "0").replace("©", "0")
+    corrected = text.replace("Â©", "0").replace("©", "0").replace("@", "0")
+    if re.match(r"^[+-]?\d+,\d{1,2}$", corrected):
+        return corrected.replace(",", ".")
+
+    return corrected

@@ -90,6 +90,44 @@ def test_parse_laboratory_result_rows_skips_non_result_lines() -> None:
     assert results[0].test_name == "Hemoglobin"
 
 
+def test_parse_multiline_observed_value_rows_preserves_ocr_lines() -> None:
+    lines = [
+        "01. Glucose [Mass/volume] in Serum or Plasma",
+        "    Observed Value: 117.8 mg/dL    Reference Range: N/A",
+        "02. Urea nitrogen [Mass/volume] in Serum or Plasma",
+        "Observed Value: 16.2 mg/d Reference Range:",
+    ]
+
+    results = parse_lab_result_rows(lines)
+
+    assert len(results) == 2
+    assert results[0].test_name == "Glucose [Mass/volume] in Serum or Plasma"
+    assert results[0].value.numeric == 117.8
+    assert results[0].unit == "mg/dL"
+    assert results[0].reference_range == "N/A"
+    assert results[0].raw_line == "\n".join(lines[:2])
+    assert results[1].test_name == "Urea nitrogen [Mass/volume] in Serum or Plasma"
+    assert results[1].value.numeric == 16.2
+    assert results[1].unit == "mg/dL"
+    assert results[1].reference_range == ""
+    assert results[1].raw_line == "\n".join(lines[2:])
+
+
+def test_parse_multiline_observed_value_row_cleans_ocr_list_marker_noise() -> None:
+    lines = [
+        "0), Glucose [Mass/Vvo : anee)",
+        "observed Value: 217.8 mg/dL Reference Range!",
+        "%. Potassium [Moles/volume] in Serum or Plasma",
+        "Observed Value: 4.@ mmol/L — Reference Range: N/A",
+    ]
+
+    results = parse_lab_result_rows(lines)
+
+    assert len(results) == 2
+    assert results[0].test_name == "Glucose [Mass/Vvo : anee)"
+    assert results[1].test_name == "Potassium [Moles/volume] in Serum or Plasma"
+
+
 def test_parse_collapsed_ocr_result_row_preserves_raw_line() -> None:
     raw_line = "Hemoglobin 12.5 gm/di 13.0 - 17.0 L"
 

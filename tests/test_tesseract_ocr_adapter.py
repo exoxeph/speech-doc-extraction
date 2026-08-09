@@ -30,6 +30,8 @@ def test_tesseract_adapter_maps_stdout_to_ocr_lines() -> None:
     ]
     assert calls[0][0][0][0] == "tesseract"
     assert calls[0][1]["capture_output"] is True
+    assert calls[0][1]["encoding"] == "utf-8"
+    assert calls[0][1]["errors"] == "replace"
 
 
 def test_guess_image_suffix_detects_supported_images() -> None:
