@@ -1,0 +1,32 @@
+{
+  "report_clean.jpg": {
+    "document_type": "lab_report",
+    "purpose": "Clean synthetic lab report baseline.",
+    "source": "Generated locally with synthetic patient data."
+  },
+  "report_angled.jpg": {
+    "document_type": "lab_report",
+    "purpose": "Mild perspective/skew distortion.",
+    "source": "Generated locally from the synthetic clean report."
+  },
+  "report_dark.jpg": {
+    "document_type": "lab_report",
+    "purpose": "Poor-light report image.",
+    "source": "Generated locally from the synthetic clean report."
+  },
+  "report_cropped.jpg": {
+    "document_type": "lab_report",
+    "purpose": "Partially cropped report.",
+    "source": "Generated locally from the synthetic clean report."
+  },
+  "report_rotated.jpg": {
+    "document_type": "lab_report",
+    "purpose": "Rotated report image.",
+    "source": "Generated locally from the synthetic clean report."
+  },
+  "not_lab_report.jpg": {
+    "document_type": "unknown",
+    "purpose": "Non-lab numeric document used to verify conservative rejection.",
+    "source": "Generated locally as a synthetic restaurant receipt."
+  }
+}
