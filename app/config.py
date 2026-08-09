@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     mock_transcription_response_dir: Path = Path(
         "testdata/mock_responses/transcription"
     )
+    ocr_provider: str = "mock"
+    mock_ocr_response_dir: Path = Path("testdata/mock_responses/ocr")
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

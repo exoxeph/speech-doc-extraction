@@ -4,6 +4,8 @@ import pytest
 
 from app.adapters.transcription.factory import create_transcription_provider
 import app.adapters.transcription.factory as transcription_factory
+from app.adapters.ocr.factory import create_ocr_provider
+from app.adapters.ocr.mock import MockOCRAdapter
 from app.adapters.transcription.mock import MockTranscriptionAdapter
 from app.config import Settings, get_settings
 
@@ -36,11 +38,24 @@ def test_factory_creates_mock_transcription_provider() -> None:
     assert isinstance(provider, MockTranscriptionAdapter)
 
 
+def test_factory_creates_mock_ocr_provider() -> None:
+    provider = create_ocr_provider(Settings(ocr_provider="mock"))
+
+    assert isinstance(provider, MockOCRAdapter)
+
+
 def test_factory_rejects_unknown_transcription_provider() -> None:
     settings = Settings(transcription_provider="banana")
 
     with pytest.raises(ValueError, match="Unsupported transcription provider: banana"):
         create_transcription_provider(settings)
+
+
+def test_factory_rejects_unknown_ocr_provider() -> None:
+    settings = Settings(ocr_provider="banana")
+
+    with pytest.raises(ValueError, match="Unsupported OCR provider: banana"):
+        create_ocr_provider(settings)
 
 
 def test_factory_creates_faster_whisper_provider(monkeypatch) -> None:
