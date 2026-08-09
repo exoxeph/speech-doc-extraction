@@ -1,0 +1,9 @@
+{
+  "provider": "mock",
+  "lines": [
+    "RESTAURANT RECEIPT",
+    "Burger        12.99",
+    "Tax            1.30",
+    "Total         14.29"
+  ]
+}

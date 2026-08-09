@@ -1,0 +1,11 @@
+{
+  "provider": "mock",
+  "lines": [
+    "ABC Diagnostic Centre",
+    "Patient Name: John Doe",
+    "Age: 28    Sex: Male",
+    "Report Date: 2026-08-07",
+    "Reference No: R12345",
+    "Hemoglobin    12.5    gm/dl    13.0 - 17.0    L"
+  ]
+}

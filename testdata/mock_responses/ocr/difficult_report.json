@@ -1,0 +1,12 @@
+{
+  "provider": "mock",
+  "lines": [
+    "City Lab",
+    "patient name : Jane Smith",
+    "AGE 34      SEX Female",
+    "Date: 8 Aug 2026",
+    "Ref No. ZX-7788",
+    "WBC Count     12,500     10^3/uL     4,000 - 11,000     H",
+    "CRP     <0.5     mg/dL     0.0 - 1.0"
+  ]
+}
