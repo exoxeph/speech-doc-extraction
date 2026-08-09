@@ -45,6 +45,33 @@ def test_parse_laboratory_result_row_handles_comma_value_and_flag() -> None:
     assert result.raw_line == raw_line
 
 
+def test_parse_pipe_separated_ocr_result_row_preserves_raw_line() -> None:
+    raw_line = 'Creatinine [Mass/volume] in Serum or Plasma | 1.9 | mg/d | "/a'
+
+    result = parse_lab_result_row(raw_line)
+
+    assert result is not None
+    assert result.test_name == "Creatinine [Mass/volume] in Serum or Plasma"
+    assert result.value.numeric == 1.9
+    assert result.unit == "mg/dL"
+    assert result.reference_range == "N/A"
+    assert result.flag == ""
+    assert result.raw_line == raw_line
+
+
+def test_parse_pipe_separated_ocr_zero_confusion() -> None:
+    raw_line = "Glucose [Mass/volume] in Urine by Test strip | Â©.9 | mg/dt | w/a"
+
+    result = parse_lab_result_row(raw_line)
+
+    assert result is not None
+    assert result.value.numeric == 0.9
+    assert result.value.raw == "Â©.9"
+    assert result.unit == "mg/dL"
+    assert result.reference_range == "N/A"
+    assert result.raw_line == raw_line
+
+
 def test_parse_laboratory_result_row_rejects_uncertain_numeric_value() -> None:
     raw_line = "Hemoqlobin     ??13.?     mg??     13.0 - 17.0"
 

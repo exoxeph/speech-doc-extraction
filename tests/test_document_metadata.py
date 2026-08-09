@@ -65,3 +65,23 @@ def test_parse_metadata_does_not_invent_values_from_unrelated_text() -> None:
     assert meta.report_date is None
     assert meta.lab_name is None
     assert meta.reference_no is None
+
+
+def test_parse_metadata_from_tesseract_clean_report_lines() -> None:
+    meta = parse_lab_report_meta(
+        [
+            "LYNN URGENT CARE LLC",
+            "LABORATORY RESULT REPORT",
+            "Patient Name: Guadalupe206 Valencia279",
+            "Date of Birth: 1954-04-26 Age: 60 Sex: F",
+            "Report Date: 2014-06-30",
+            "Reference No: SYN-7AD140AB",
+        ]
+    )
+
+    assert meta.patient_name == "Guadalupe206 Valencia279"
+    assert meta.age == "60"
+    assert meta.sex == "Female"
+    assert meta.report_date == "2014-06-30"
+    assert meta.lab_name == "LYNN URGENT CARE LLC"
+    assert meta.reference_no == "SYN-7AD140AB"

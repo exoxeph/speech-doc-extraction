@@ -19,10 +19,12 @@ def normalize_lab_value(text: str) -> LabValue | None:
     if not candidate:
         return None
 
-    if _RANGE.match(candidate):
+    normalized_candidate = _normalize_ocr_number_text(candidate)
+
+    if _RANGE.match(normalized_candidate):
         return None
 
-    qualified = _QUALIFIED_NUMBER.match(candidate)
+    qualified = _QUALIFIED_NUMBER.match(normalized_candidate)
     if qualified:
         numeric = _parse_number(qualified.group("number"))
         return LabValue(
@@ -31,16 +33,20 @@ def normalize_lab_value(text: str) -> LabValue | None:
             raw=candidate,
         )
 
-    scientific = _SCIENTIFIC_NUMBER.match(candidate)
+    scientific = _SCIENTIFIC_NUMBER.match(normalized_candidate)
     if scientific:
         numeric = float(scientific.group("base")) * (10 ** int(scientific.group("exponent")))
         return LabValue(numeric=numeric, raw=candidate)
 
-    if _PLAIN_NUMBER.match(candidate):
-        return LabValue(numeric=_parse_number(candidate), raw=candidate)
+    if _PLAIN_NUMBER.match(normalized_candidate):
+        return LabValue(numeric=_parse_number(normalized_candidate), raw=candidate)
 
     return None
 
 
 def _parse_number(text: str) -> float:
     return float(text.replace(",", ""))
+
+
+def _normalize_ocr_number_text(text: str) -> str:
+    return text.replace("Â©", "0").replace("©", "0")

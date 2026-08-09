@@ -11,7 +11,13 @@ from app.services.unit_normalizer import normalize_unit
         ("g/dL", "g/dL"),
         ("mg/dL", "mg/dL"),
         ("mg/dl", "mg/dL"),
+        ("mg/di", "mg/dL"),
+        ("mg/dt", "mg/dL"),
+        ("mg/d", "mg/dL"),
         ("mmol/L", "mmol/L"),
+        ("mmol/t", "mmol/L"),
+        ("mmol/i", "mmol/L"),
+        ("mt/min/{1.73_m2}", "mL/min/{1.73_m2}"),
         ("10^3/µL", "10^3/uL"),
     ],
 )

@@ -1,32 +1,42 @@
 {
-  "report_clean.jpg": {
+  "report_01_standard_clean.jpg": {
     "document_type": "lab_report",
-    "purpose": "Clean synthetic lab report baseline.",
-    "source": "Generated locally with synthetic patient data."
+    "purpose": "Clean baseline for the standard Synthea-derived lab report layout.",
+    "source": "Synthetic report text built from Synthea data, displayed on-screen, and photographed with a phone."
   },
-  "report_angled.jpg": {
+  "report_01_standard_angled.jpg": {
     "document_type": "lab_report",
-    "purpose": "Mild perspective/skew distortion.",
-    "source": "Generated locally from the synthetic clean report."
+    "purpose": "Angled capture of the standard Synthea-derived lab report layout.",
+    "source": "Synthetic report text built from Synthea data, displayed on-screen, and photographed with a phone."
   },
-  "report_dark.jpg": {
+  "report_02_complex_dark.jpg": {
     "document_type": "lab_report",
-    "purpose": "Poor-light report image.",
-    "source": "Generated locally from the synthetic clean report."
+    "purpose": "Dark capture of a multi-line Synthea-derived lab report layout.",
+    "source": "Synthetic report text built from Synthea data, displayed on-screen, and photographed with a phone."
   },
-  "report_cropped.jpg": {
+  "report_02_complex_cropped.jpg": {
     "document_type": "lab_report",
-    "purpose": "Partially cropped report.",
-    "source": "Generated locally from the synthetic clean report."
+    "purpose": "Cropped capture of a multi-line Synthea-derived lab report layout.",
+    "source": "Synthetic report text built from Synthea data, displayed on-screen, and photographed with a phone."
   },
-  "report_rotated.jpg": {
+  "report_03_alternate_rotated.jpg": {
     "document_type": "lab_report",
-    "purpose": "Rotated report image.",
-    "source": "Generated locally from the synthetic clean report."
+    "purpose": "Rotated capture of an alternate Synthea-derived lab report layout.",
+    "source": "Synthetic report text built from Synthea data, displayed on-screen, and photographed with a phone."
   },
-  "not_lab_report.jpg": {
+  "report_04_normalization_clean.jpg": {
+    "document_type": "lab_report",
+    "purpose": "Clean normalization edge-case fixture for difficult values, units, ranges, and flags.",
+    "source": "Purpose-built synthetic parser/OCR fixture displayed on-screen and photographed with a phone."
+  },
+  "report_04_normalization_angled.jpg": {
+    "document_type": "lab_report",
+    "purpose": "Angled normalization edge-case fixture for difficult values, units, ranges, and flags.",
+    "source": "Purpose-built synthetic parser/OCR fixture displayed on-screen and photographed with a phone."
+  },
+  "not_lab_receipt.jpg": {
     "document_type": "unknown",
-    "purpose": "Non-lab numeric document used to verify conservative rejection.",
-    "source": "Generated locally as a synthetic restaurant receipt."
+    "purpose": "Non-lab numeric receipt used to verify conservative rejection.",
+    "source": "Purpose-built synthetic negative fixture displayed on-screen and photographed with a phone."
   }
 }
