@@ -109,6 +109,12 @@ def parse_lab_result_rows(lines: list[str]) -> list[LabResult]:
 
 def _parse_observed_value_row(test_line: str, value_line: str) -> LabResult | None:
     normalized_line = value_line.replace("—", " ")
+    normalized_line = re.sub(
+        r"\s+[A-Za-z]-\s+(reference\s+range\b)",
+        r" \1",
+        normalized_line,
+        flags=re.IGNORECASE,
+    )
     match = re.search(
         r"\bobserved\s+value\b\s*[:.]?\s*"
         r"(?P<value>(?:<=|>=|<|>)?\s*[^\s]+(?:\s*(?:x|\*)\s*10\^?\d+)?)\s+"
@@ -152,7 +158,13 @@ def _looks_like_test_name_line(line: str) -> bool:
 def _clean_test_name(line: str) -> str:
     stripped = line.strip()
     without_number = re.sub(r"^\d+[\).,]\s*", "", stripped).strip()
-    return without_number.lstrip(" ,.;:%)]").strip()
+    without_marker = without_number.lstrip(" ,.;:%)]").strip()
+    return re.sub(
+        r"\s*[:;]\s*(?:n/?a|w/?a)$",
+        "",
+        without_marker,
+        flags=re.IGNORECASE,
+    ).strip()
 
 
 def _normalize_reference_range(reference_range: str) -> str:

@@ -128,6 +128,24 @@ def test_parse_multiline_observed_value_row_cleans_ocr_list_marker_noise() -> No
     assert results[1].test_name == "Potassium [Moles/volume] in Serum or Plasma"
 
 
+def test_parse_multiline_observed_value_row_cleans_cropped_artifacts() -> None:
+    lines = [
+        "creatinine [Mass/volume] in Serum or Plasma : WA",
+        "Observed Value: 2.0 mg/dl Reference Range:",
+        "Sodium [Moles/volume] in Serum or Plasma",
+        "Observed Value: 137.4 mmol/L —s- Reference Range: N/A",
+    ]
+
+    results = parse_lab_result_rows(lines)
+
+    assert len(results) == 2
+    assert results[0].test_name == "creatinine [Mass/volume] in Serum or Plasma"
+    assert results[0].unit == "mg/dL"
+    assert results[1].test_name == "Sodium [Moles/volume] in Serum or Plasma"
+    assert results[1].unit == "mmol/L"
+    assert results[1].reference_range == "N/A"
+
+
 def test_parse_collapsed_ocr_result_row_preserves_raw_line() -> None:
     raw_line = "Hemoglobin 12.5 gm/di 13.0 - 17.0 L"
 
