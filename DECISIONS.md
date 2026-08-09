@@ -10,13 +10,13 @@ Reason: the assignment requires a clean, testable AI service. Mock defaults make
 
 Tradeoff: mock output does not measure model quality, so real-provider evaluation is documented separately.
 
-## Decision 2 - Structured Lab Values
+## Decision 2 - Structured Scalar and Range Lab Values
 
-Chosen: lab values are represented as an object with `numeric`, optional `operator`, and original `raw` text.
+Chosen: lab values are represented as an object with an explicit `kind`, scalar `numeric` value when applicable, optional `operator`, optional numeric `range`, and original `raw` text.
 
-Rejected: forcing every value into a plain float.
+Rejected: forcing every value into a plain float or reducing ranges to one endpoint or midpoint.
 
-Reason: formats like `<0.5` carry clinically relevant qualifier information. A structured value preserves that information without guessing.
+Reason: formats like `<0.5` carry clinically relevant qualifier information, while formats like `0.8 - 1.2` are true ranges that cannot be truthfully represented as one scalar. The structured model preserves the value semantics without guessing.
 
 Tradeoff: the API response is slightly more verbose than a single numeric field.
 

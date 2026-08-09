@@ -223,8 +223,10 @@ curl -X POST \
     {
       "test_name": "Hemoglobin",
       "value": {
+        "kind": "scalar",
         "numeric": 12.5,
         "operator": null,
+        "range": null,
         "raw": "12.5"
       },
       "unit": "g/dL",
