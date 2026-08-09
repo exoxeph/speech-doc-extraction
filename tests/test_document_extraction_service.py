@@ -31,3 +31,13 @@ def test_document_extraction_service_normalizes_unambiguous_metadata_date() -> N
     assert extraction.meta.report_date == "2026-08-08"
     assert [result.test_name for result in extraction.results] == ["WBC Count", "CRP"]
     assert extraction.results[0].value.numeric == 12500.0
+
+
+def test_document_extraction_service_returns_unknown_for_non_lab_document() -> None:
+    service = DocumentExtractionService(MockOCRAdapter(FIXTURE_DIR))
+
+    extraction = asyncio.run(service.extract(b"not_lab_report"))
+
+    assert extraction.document_type == "unknown"
+    assert extraction.meta.patient_name is None
+    assert extraction.results == []
